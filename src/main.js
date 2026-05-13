@@ -1,6 +1,4 @@
 import { LocalSwitchRuntime, createInputState, mergeGamepadInput } from './emulatorCore.js';
-import { WasmCoreAdapter } from './wasmCoreAdapter.js';
-import { VirtualSwitchSystem } from './switchSystem.js';
 
 const canvas = document.querySelector('#game-screen');
 const ctx = canvas.getContext('2d');
@@ -8,14 +6,8 @@ const statusEl = document.querySelector('#runtime-status');
 const fpsEl = document.querySelector('#fps-counter');
 const startButton = document.querySelector('#start-button');
 const romInput = document.querySelector('#rom-input');
-const coreInput = document.querySelector('#core-input');
 const input = createInputState();
 const runtime = new LocalSwitchRuntime({ width: canvas.width, height: canvas.height });
-const switchSystem = new VirtualSwitchSystem();
-switchSystem.powerOn();
-const wasmCore = new WasmCoreAdapter({ logger: (message) => {
-  statusEl.textContent = message;
-} });
 
 const keyMap = new Map([
   ['ArrowUp', 'up'],
@@ -71,32 +63,14 @@ for (const button of document.querySelectorAll('[data-key]')) {
 
 startButton.addEventListener('click', () => {
   runtime.reset();
-  switchSystem.reset();
-  wasmCore.reset();
-  statusEl.textContent = wasmCore.ready ? 'WASM core reset. Running locally on this device.' : 'Demo core reset. Running locally on this device.';
+  statusEl.textContent = 'Demo core reset. Running locally on this device.';
 });
 
 romInput.addEventListener('change', () => {
   const [file] = romInput.files;
   if (!file) return;
   const cartridge = runtime.loadCartridge(file);
-  switchSystem.stagePackage({ name: file.name, size: file.size, type: 'homebrew' });
-  const loadMode = wasmCore.canLoadCartridge() ? 'ready for the loaded WASM core' : 'staged locally for a compatible legal core';
-  statusEl.textContent = `${cartridge.name} ${loadMode} (${Math.round(cartridge.size / 1024).toLocaleString()} KB).`;
-});
-
-coreInput.addEventListener('change', async () => {
-  const [file] = coreInput.files;
-  if (!file) return;
-
-  try {
-    statusEl.textContent = `Loading ${file.name} locally…`;
-    const metadata = await wasmCore.loadCore(file);
-    switchSystem.stagePackage({ name: file.name, size: file.size, type: 'wasm-core' });
-    statusEl.textContent = `${metadata.coreName} loaded with exports: ${metadata.exports.join(', ') || 'none'}.`;
-  } catch (error) {
-    statusEl.textContent = error.message;
-  }
+  statusEl.textContent = `${cartridge.name} staged (${Math.round(cartridge.size / 1024).toLocaleString()} KB).`;
 });
 
 function drawBackground(snapshot) {
@@ -185,8 +159,6 @@ let fpsTimer = previous;
 
 function frame(now) {
   const padInput = mergeGamepadInput(input, navigator.getGamepads?.() || []);
-  wasmCore.runFrame();
-  switchSystem.tick(now - previous);
   const snapshot = runtime.update(padInput, (now - previous) / 1000);
   previous = now;
   render(snapshot);

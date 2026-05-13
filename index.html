@@ -57,11 +57,7 @@
           <button id="start-button" type="button">Start / Reset</button>
           <label class="file-loader">
             Load legal homebrew/ROM
-            <input id="rom-input" type="file" accept=".nro,.nso,.nca,.xci,.nsp,.zip" />
-          </label>
-          <label class="file-loader core-loader">
-            Load legal WASM core
-            <input id="core-input" type="file" accept=".wasm,application/wasm" />
+            <input id="rom-input" type="file" accept=".nro,.nso,.nca,.xci,.nsp,.wasm,.zip" />
           </label>
         </div>
       </section>
@@ -83,15 +79,10 @@
         <h2 id="notes-title">What this can and cannot do</h2>
         <ul>
           <li>Runs entirely as static files; no server-side CPU/GPU resources are used.</li>
-          <li>Includes a Horizon-style system scaffold for power state, HID, CPU/GPU/audio service boundaries, and sandboxed file staging.</li>
           <li>Stores only metadata about loaded files, never uploads ROMs or keys.</li>
           <li>
             A production Nintendo Switch emulator requires a substantial CPU/GPU/audio/kernel
             WebAssembly core plus legally supplied firmware, keys, and game images.
-          </li>
-          <li>
-            This app does not decrypt commercial games, provide keys, or bypass copy protection;
-            it only exposes a legal homebrew WebAssembly core plug-in boundary.
           </li>
         </ul>
       </section>

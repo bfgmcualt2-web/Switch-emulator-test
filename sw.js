@@ -4,8 +4,6 @@ const ASSETS = [
   './index.html',
   './manifest.webmanifest',
   './src/emulatorCore.js',
-  './src/wasmCoreAdapter.js',
-  './src/switchSystem.js',
   './src/main.js',
   './src/styles.css'
 ];
