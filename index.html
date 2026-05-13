@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#111827" />
+    <title>Local Switch Emulator Web Shell</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero" aria-labelledby="app-title">
+        <p class="eyebrow">Offline • iPad-first • client-only</p>
+        <h1 id="app-title">Switch Emulator Web Shell</h1>
+        <p>
+          This prototype keeps execution local to the iPad/browser sandbox. It includes a playable
+          homebrew-style demo core today and a ROM loader boundary for a future legal WebAssembly
+          emulator core.
+        </p>
+      </section>
+
+      <section class="console" aria-label="Emulator console">
+        <div class="joycon joycon-left" aria-hidden="true">
+          <span class="stick"></span>
+          <span class="button mini"></span>
+          <span class="button mini"></span>
+          <span class="dpad">+</span>
+        </div>
+
+        <div class="screen-wrap">
+          <canvas id="game-screen" width="960" height="540" aria-label="Playable emulator screen"></canvas>
+          <div class="status-bar">
+            <span id="runtime-status">Booting local runtime…</span>
+            <span id="fps-counter">0 FPS</span>
+          </div>
+        </div>
+
+        <div class="joycon joycon-right" aria-hidden="true">
+          <span class="button">X</span>
+          <span class="button">Y</span>
+          <span class="button">A</span>
+          <span class="button">B</span>
+          <span class="stick small"></span>
+        </div>
+      </section>
+
+      <section class="controls" aria-labelledby="controls-title">
+        <div>
+          <h2 id="controls-title">Play the included demo</h2>
+          <p>
+            Move with WASD/arrow keys or the on-screen controls. Jump with Space/A. Collect sparks
+            while avoiding the red drones. Bluetooth controllers that expose the Gamepad API also work.
+          </p>
+        </div>
+        <div class="actions">
+          <button id="start-button" type="button">Start / Reset</button>
+          <label class="file-loader">
+            Load legal homebrew/ROM
+            <input id="rom-input" type="file" accept=".nro,.nso,.nca,.xci,.nsp,.wasm,.zip" />
+          </label>
+        </div>
+      </section>
+
+      <section class="touch-controls" aria-label="Touch controls">
+        <div class="touch-dpad">
+          <button data-key="up" aria-label="Move up">▲</button>
+          <button data-key="left" aria-label="Move left">◀</button>
+          <button data-key="down" aria-label="Move down">▼</button>
+          <button data-key="right" aria-label="Move right">▶</button>
+        </div>
+        <div class="touch-actions">
+          <button data-key="jump" aria-label="Jump">A</button>
+          <button data-key="boost" aria-label="Boost">B</button>
+        </div>
+      </section>
+
+      <section class="notes" aria-labelledby="notes-title">
+        <h2 id="notes-title">What this can and cannot do</h2>
+        <ul>
+          <li>Runs entirely as static files; no server-side CPU/GPU resources are used.</li>
+          <li>Stores only metadata about loaded files, never uploads ROMs or keys.</li>
+          <li>
+            A production Nintendo Switch emulator requires a substantial CPU/GPU/audio/kernel
+            WebAssembly core plus legally supplied firmware, keys, and game images.
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <script type="module" src="src/main.js"></script>
+  </body>
+</html>

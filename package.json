@@ -1,0 +1,21 @@
+{
+  "name": "switch-emulator-test",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A client-only iPad-friendly Switch emulator web shell with a playable demo core.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "start": "python3 -m http.server 4173",
+    "pages:check": "node --test tests/*.test.js",
+    "github:publish": "scripts/publish-to-github.sh"
+  },
+  "keywords": [
+    "switch",
+    "emulator",
+    "pwa",
+    "ipad",
+    "web"
+  ],
+  "license": "MIT"
+}
