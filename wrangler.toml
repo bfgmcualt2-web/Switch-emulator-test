@@ -1,7 +1,6 @@
-name = "switch-emulator-proxy"
+name = "xbox-cloud-gaming-proxy"
 main = "worker.js"
 compatibility_date = "2026-09-16"
 
 [vars]
-# Set this to the public upstream origin you want to proxy to.
-UPSTREAM_ORIGIN = "https://youtube.com"
+UPSTREAM_ORIGIN = "https://www.xbox.com"
