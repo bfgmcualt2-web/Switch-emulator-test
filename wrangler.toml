@@ -3,4 +3,4 @@ main = "worker.js"
 compatibility_date = "2026-09-16"
 
 [vars]
-UPSTREAM_ORIGIN = "https://www.xbox.com"
+UPSTREAM_ORIGIN = "https://www.xbox.com/en-us/play"
