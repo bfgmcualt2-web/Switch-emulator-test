@@ -1,0 +1,9 @@
+name = "switch-emulator-proxy"
+main = "worker.js"
+compatibility_date = "2026-09-16"
+
+[vars]
+# Change this before deploying, or set it with `wrangler secret put UPSTREAM_ORIGIN`.
+UPSTREAM_ORIGIN = "https://example.com"
+# Optional: set a secret to require an `X-Proxy-Key` request header.
+# PROXY_KEY = ""

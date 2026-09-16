@@ -3,19 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "A client-only iPad-friendly Switch emulator web shell with a playable demo core.",
+  "description": "A client-only iPad-friendly Switch emulator web shell with a Cloudflare reverse proxy.",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "start": "python3 -m http.server 4173",
     "pages:check": "node --test tests/*.test.js",
-    "github:publish": "scripts/publish-to-github.sh"
+    "github:publish": "scripts/publish-to-github.sh",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   },
   "keywords": [
     "switch",
     "emulator",
     "pwa",
-    "ipad",
-    "web"
+    "web",
+    "cloudflare",
+    "proxy"
   ],
   "license": "MIT"
 }
