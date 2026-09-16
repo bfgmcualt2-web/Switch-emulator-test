@@ -1,8 +1,8 @@
 # Switch Emulator Test
 
-This repository contains a static browser demo and an optional Cloudflare Worker reverse proxy.
-The Worker is intentionally a **fixed-upstream proxy**, not an open proxy: it forwards requests only
- to the origin configured in `UPSTREAM_ORIGIN`.
+This repository contains a static browser demo and an open Cloudflare Worker reverse proxy.
+The Worker is a fixed-upstream proxy: it forwards requests only to the origin configured in
+`UPSTREAM_ORIGIN` and does not accept arbitrary destination URLs from the client.
 
 ## Run the proxy on Cloudflare Workers
 
@@ -22,15 +22,6 @@ npx wrangler deploy
 The Worker forwards both `/proxy/path?query=1` and `/path?query=1` to the configured upstream. It
 also exposes `/health` for a simple deployment check.
 
-For a private deployment, configure a key as a Wrangler secret:
-
-```bash
-npx wrangler secret put PROXY_KEY
-```
-
-Clients must then send `X-Proxy-Key: <the-secret>`; the key is never forwarded upstream. Keep the
-Worker URL private or put it behind Cloudflare Access if the upstream should not be publicly reachable.
-
 ### Local Worker development
 
 ```bash
@@ -40,8 +31,7 @@ curl http://localhost:8787/proxy/some/path
 ```
 
 `UPSTREAM_ORIGIN` must be an `http://` or `https://` URL. The Worker does not accept a destination URL
-from the client, which prevents it from becoming an SSRF/open-proxy service. CORS is enabled for browser
-clients; narrow `access-control-allow-origin` in `worker.js` if the proxy is only for one site.
+from the client, which keeps it fixed and safe. CORS is enabled for browser clients.
 
 ## Run the browser demo
 
