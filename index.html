@@ -2,35 +2,93 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta http-equiv="refresh" content="0; url=https://www.youtube.com" />
-    <title>Redirecting to YouTube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YouTube Allowlist Proxy</title>
     <style>
+      :root {
+        --bg: #0f172a;
+        --panel: #111827;
+        --text: #f8fafc;
+        --muted: #cbd5e1;
+        --accent: #f87171;
+        --border: rgba(148, 163, 184, 0.25);
+      }
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
         display: grid;
         place-items: center;
-        background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
-        color: #f8fafc;
+        background: linear-gradient(135deg, #0f172a, #111827 45%, #0b1120);
+        color: var(--text);
         font-family: Arial, Helvetica, sans-serif;
       }
-      .box {
-        text-align: center;
-        padding: 32px;
+      .card {
+        width: min(700px, calc(100vw - 32px));
+        background: rgba(17, 24, 39, 0.9);
+        border: 1px solid var(--border);
         border-radius: 20px;
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 28px;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.55);
       }
-      a {
-        color: #f87171;
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2rem, 5vw, 3rem);
+      }
+      p {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+      }
+      input {
+        flex: 1 1 420px;
+        min-height: 52px;
+        padding: 0 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text);
+        font-size: 1rem;
+      }
+      button {
+        min-height: 52px;
+        padding: 0 22px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .note {
+        margin-top: 18px;
+        font-size: 0.95rem;
       }
     </style>
   </head>
   <body>
-    <div class="box">
-      <h1>Redirecting to YouTube...</h1>
-      <p>If you are not redirected, <a href="https://www.youtube.com">click here</a>.</p>
-    </div>
+    <main class="card">
+      <h1>Open an allowlisted YouTube URL</h1>
+      <p>
+        This proxy only allows destinations from the configured allowlist. Enter a supported YouTube URL below.
+      </p>
+      <form method="GET" action="/proxy">
+        <input
+          type="url"
+          name="url"
+          placeholder="https://www.youtube.com/watch?v=..."
+          required
+        />
+        <button type="submit">Open</button>
+      </form>
+      <p class="note">
+        Allowed origins: youtube.com, www.youtube.com, m.youtube.com, music.youtube.com, youtu.be.
+      </p>
+    </main>
   </body>
 </html>
