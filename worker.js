@@ -76,9 +76,7 @@ export default {
     // A bare Worker URL now opens the real site directly. This avoids a broken
     // loading shell caused by CrazyGames client-side API, CDN, and WebSocket
     // requests that cannot be reliably represented by a basic HTML proxy.
-    if (!target) {
-      return Response.redirect('https://www.crazygames.com/', 302);
-    }
+    
 
     // Keep the restricted proxy endpoint available for explicitly supplied
     // targets, while never forwarding credentials or upstream cookies.
