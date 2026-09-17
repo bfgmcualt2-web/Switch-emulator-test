@@ -1,16 +1,16 @@
-# Switch Emulator Test
+# YouTube redirect
 
-This repository now redirects directly to the official Xbox Cloud Gaming site.
+This repository now redirects directly to the official YouTube site.
 
 ## Cloudflare proxy
 
-The Worker proxies requests to the fixed upstream origin:
+The Worker forwards requests to the fixed upstream origin:
 
 ```toml
-UPSTREAM_ORIGIN = "https://www.xbox.com"
+UPSTREAM_ORIGIN = "https://www.youtube.com"
 ```
 
-This keeps the deployment pointed at the official Xbox Cloud Gaming site and preserves the cloudflare proxy pattern.
+This keeps the deployment pointed at the official YouTube site while preserving the Cloudflare worker pattern.
 
 ## Local development
 
@@ -25,4 +25,4 @@ Then open:
 - http://localhost:8787/
 - http://localhost:8787/proxy/
 
-Both are routed to the official Xbox Cloud Gaming site through the fixed upstream origin.
+Both routes are pointed to the official YouTube site.

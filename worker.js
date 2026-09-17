@@ -42,7 +42,7 @@ export default {
 
     const incoming = new URL(request.url);
     if (incoming.pathname === '/health') {
-      return json({ ok: true, service: 'xbox-cloud-gaming-proxy' });
+      return json({ ok: true, service: 'youtube-proxy' });
     }
 
     if (!env.UPSTREAM_ORIGIN) {
