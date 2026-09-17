@@ -6,9 +6,19 @@ const corsHeaders = {
   'access-control-allow-origin': '*',
 };
 
-function withCors(response) {
+function withCors(response, setProxyCookie = false) {
   const headers = new Headers(response.headers);
   for (const [name, value] of Object.entries(corsHeaders)) headers.set(name, value);
+
+  // Never expose or pass through cookies set by the upstream site.
+  headers.delete('set-cookie');
+  if (setProxyCookie) {
+    headers.append(
+      'set-cookie',
+      'proxy_preferences=1; Path=/; Max-Age=86400; Secure; HttpOnly; SameSite=Lax'
+    );
+  }
+
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
@@ -43,7 +53,7 @@ function htmlError(message) {
 }
 
 function isAllowedHost(hostname) {
-  const host = hostname.toLowerCase().replace(/\\.$/, '');
+  const host = hostname.toLowerCase().replace(/\.$/, '');
   return host === ALLOWED_ROOT_DOMAIN || host.endsWith(`.${ALLOWED_ROOT_DOMAIN}`);
 }
 
@@ -76,10 +86,12 @@ export default {
 
     const incoming = new URL(request.url);
     const headers = new Headers(request.headers);
-    // Never forward proxy cookies, authorization, or proxy-specific headers.
+    // Proxy preferences belong to this Worker only. Never forward credentials upstream.
     headers.delete('cookie');
     headers.delete('authorization');
     headers.delete('host');
+    headers.delete('x-forwarded-host');
+    headers.delete('x-forwarded-proto');
     headers.set('x-forwarded-host', incoming.host);
     headers.set('x-forwarded-proto', incoming.protocol.replace(':', ''));
 
@@ -89,7 +101,7 @@ export default {
         headers,
         redirect: 'manual',
       }));
-      return withCors(response);
+      return withCors(response, true);
     } catch (error) {
       return htmlError(error instanceof Error ? error.message : 'The CrazyGames request failed.');
     }
