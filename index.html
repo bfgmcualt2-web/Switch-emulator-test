@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>YouTube Allowlist Proxy</title>
+    <title>Allowlisted Gaming Proxy</title>
     <style>
       :root {
         --bg: #0f172a;
@@ -24,7 +24,7 @@
         font-family: Arial, Helvetica, sans-serif;
       }
       .card {
-        width: min(700px, calc(100vw - 32px));
+        width: min(760px, calc(100vw - 32px));
         background: rgba(17, 24, 39, 0.9);
         border: 1px solid var(--border);
         border-radius: 20px;
@@ -73,21 +73,21 @@
   </head>
   <body>
     <main class="card">
-      <h1>Open an allowlisted YouTube URL</h1>
+      <h1>Gaming proxy</h1>
       <p>
-        This proxy only allows destinations from the configured allowlist. Enter a supported YouTube URL below.
+        This proxy supports a fixed allowlist of approved gaming sites. Paste a URL from one of the supported origins below.
       </p>
       <form method="GET" action="/proxy">
         <input
           type="url"
           name="url"
-          placeholder="https://www.youtube.com/watch?v=..."
+          placeholder="https://www.xbox.com/play"
           required
         />
         <button type="submit">Open</button>
       </form>
       <p class="note">
-        Allowed origins: youtube.com, www.youtube.com, m.youtube.com, music.youtube.com, youtu.be.
+        Allowed origins include: xbox.com, www.xbox.com, now.gg, www.now.gg, lordz.io, www.lordz.io, and common io gaming sites like agar.io, diep.io, mope.io, slither.io, shellshock.io, and tinyfishing.io.
       </p>
     </main>
   </body>

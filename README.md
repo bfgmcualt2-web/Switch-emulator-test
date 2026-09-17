@@ -1,22 +1,25 @@
-# YouTube allowlist proxy
+# Gaming allowlist proxy
 
 This project uses a restricted allowlist proxy rather than an unrestricted open proxy.
-The Worker accepts a target URL from the browser, verifies that it matches a fixed allowlist, and then
+The Worker accepts a target URL from the browser, verifies that it matches an allowlist, and then
 forwards the request to that origin.
 
 ## Allowed origins
 
-```js
-const ALLOWED_ORIGINS = new Set([
-  'https://youtube.com',
-  'https://www.youtube.com',
-  'https://m.youtube.com',
-  'https://music.youtube.com',
-  'https://youtu.be',
-]);
-```
+The current allowlist includes gaming and streaming destinations such as:
 
-Only requests to those origins are accepted.
+- xbox.com / www.xbox.com
+- now.gg / www.now.gg
+- lordz.io / www.lordz.io
+- agar.io / www.agar.io
+- slither.io / www.slither.io
+- mope.io / www.mope.io
+- diep.io / www.diep.io
+- shellshock.io / www.shellshock.io
+- tinyfishing.io / www.tinyfishing.io
+- iogames.space / www.iogames.space
+- crazygames.com / www.crazygames.com
+- youtube.com / www.youtube.com / m.youtube.com / music.youtube.com / youtu.be
 
 ## Local development
 
@@ -32,19 +35,19 @@ Then open:
 http://localhost:8787/
 ```
 
-Enter a URL like this into the form:
+Enter a supported URL such as:
 
 ```text
-https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.xbox.com/play
 ```
 
-The form sends the request to:
+or:
 
 ```text
-/proxy?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+https://www.now.gg/
 ```
 
-The worker validates the URL, checks that the origin is allowlisted, and then proxies the request.
+The form sends the request to a `/proxy?url=...` endpoint, which validates the origin and forwards the request if it is allowlisted.
 
 ## Deploy
 
@@ -52,4 +55,4 @@ The worker validates the URL, checks that the origin is allowlisted, and then pr
 npx wrangler deploy
 ```
 
-This is not an open proxy. It is intentionally limited to the known-good origins above.
+This is not an open proxy. It is intentionally limited to the approved gaming origins above.
