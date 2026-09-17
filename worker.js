@@ -35,7 +35,7 @@ function htmlError(message) {
 
   return withCors(new Response(`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blocked destination</title></head>
-<body><script>alert(${JSON.stringify(message)});</script><main style="font-family:system-ui,sans-serif;max-width:42rem;margin:4rem auto;padding:1rem"><h1>Destination not allowed</h1><p>${safeMessage}</p><p><a href="${proxyUrl(new URL('https://www.crazygames.com/'))}">Return to CrazyGames</a></p></main></body></html>`, {
+<body><script>alert(${JSON.stringify(message)});</script><main style="font-family:system-ui,sans-serif;max-width:42rem;margin:4rem auto;padding:1rem"><h1>Destination not allowed</h1><p>${safeMessage}</p><p><a href="https://www.crazygames.com/">Return to CrazyGames</a></p></main></body></html>`, {
     status: 403,
     headers: { 'content-type': 'text/html; charset=utf-8' },
   }));
@@ -49,7 +49,7 @@ function isAllowedHost(hostname) {
 function parseTargetUrl(request) {
   const incoming = new URL(request.url);
   const candidate = incoming.searchParams.get('url');
-  if (!candidate) return new URL('https://www.crazygames.com/');
+  if (!candidate) return null;
 
   const target = new URL(candidate);
   if (target.protocol !== 'https:') throw new Error('Only HTTPS URLs are allowed.');
@@ -57,57 +57,6 @@ function parseTargetUrl(request) {
     throw new Error('Only crazygames.com and its subdomains are allowed.');
   }
   return target;
-}
-
-function rewriteUrl(value, baseUrl) {
-  if (!value || value.startsWith('#') || /^(data:|blob:|javascript:|mailto:|tel:)/i.test(value)) return value;
-  try {
-    const absolute = new URL(value, baseUrl);
-    if (!isAllowedHost(absolute.hostname) || absolute.protocol !== 'https:') return value;
-    return proxyUrl(absolute);
-  } catch {
-    return value;
-  }
-}
-
-async function rewriteHtml(response, target) {
-  const contentType = response.headers.get('content-type') || '';
-  if (!contentType.includes('text/html')) return response;
-
-  const headers = new Headers(response.headers);
-  headers.delete('content-length');
-  headers.delete('content-encoding');
-  headers.set('content-type', 'text/html; charset=utf-8');
-
-  const rewritten = new HTMLRewriter()
-    .on('a', new URLAttributeRewriter('href', target))
-    .on('link', new URLAttributeRewriter('href', target))
-    .on('script', new URLAttributeRewriter('src', target))
-    .on('img', new URLAttributeRewriter('src', target))
-    .on('source', new URLAttributeRewriter('src', target))
-    .on('video', new URLAttributeRewriter('src', target))
-    .on('audio', new URLAttributeRewriter('src', target))
-    .on('iframe', new URLAttributeRewriter('src', target))
-    .on('form', new URLAttributeRewriter('action', target))
-    .transform(response);
-
-  return new Response(rewritten.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
-
-class URLAttributeRewriter {
-  constructor(attribute, target) {
-    this.attribute = attribute;
-    this.target = target;
-  }
-
-  element(element) {
-    const value = element.getAttribute(this.attribute);
-    if (value) element.setAttribute(this.attribute, rewriteUrl(value, this.target));
-  }
 }
 
 export default {
@@ -124,16 +73,21 @@ export default {
       return htmlError(error instanceof Error ? error.message : 'The destination is not allowed.');
     }
 
+    // A bare Worker URL now opens the real site directly. This avoids a broken
+    // loading shell caused by CrazyGames client-side API, CDN, and WebSocket
+    // requests that cannot be reliably represented by a basic HTML proxy.
+    if (!target) {
+      return Response.redirect('https://www.crazygames.com/', 302);
+    }
+
+    // Keep the restricted proxy endpoint available for explicitly supplied
+    // targets, while never forwarding credentials or upstream cookies.
     const incoming = new URL(request.url);
     const headers = new Headers(request.headers);
     headers.delete('cookie');
     headers.delete('authorization');
     headers.delete('host');
-    headers.delete('x-forwarded-host');
-    headers.delete('x-forwarded-proto');
     headers.delete('accept-encoding');
-    headers.set('x-forwarded-host', incoming.host);
-    headers.set('x-forwarded-proto', incoming.protocol.replace(':', ''));
 
     try {
       const upstream = await fetch(new Request(target, {
@@ -156,8 +110,7 @@ export default {
         }
       }
 
-      const response = await rewriteHtml(upstream, target);
-      return withCors(response, true);
+      return withCors(upstream, true);
     } catch (error) {
       return htmlError(error instanceof Error ? error.message : 'The CrazyGames request failed.');
     }
