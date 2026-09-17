@@ -1,25 +1,14 @@
 # CrazyGames domain-restricted proxy
 
-The Worker routes only to `crazygames.com` and its subdomains. It stores one harmless, proxy-owned preference cookie:
+The Worker routes only to `crazygames.com` and its subdomains. It also rewrites same-domain HTML links and asset URLs back through `/proxy`, which prevents the browser from leaving the Worker for normal page navigation, stylesheets, scripts, images, forms, and frames. Same-domain redirects are rewritten as well.
 
-```text
-proxy_preferences=1; Secure; HttpOnly; SameSite=Lax
-```
-
-This cookie belongs to the Worker domain only. It is not a CrazyGames cookie, is not used for authentication, and is never forwarded upstream. Upstream `Set-Cookie` headers are stripped, and incoming `Cookie` and `Authorization` headers are removed before requests are sent to CrazyGames.
+The proxy-owned `proxy_preferences` cookie is retained, while upstream cookies and authorization headers are removed. External CDN or service URLs remain unchanged and may require direct access; CrazyGames pages can also use WebSockets or other browser features that a basic HTTP proxy cannot reproduce.
 
 Examples:
 
 ```text
 /proxy?url=https://www.crazygames.com/
 /proxy?url=https://www.crazygames.com/game/example
-/proxy?url=https://games.crazygames.com/
 ```
 
-If no `url` parameter is supplied, the Worker uses `https://www.crazygames.com/`. URLs outside the CrazyGames domain, non-HTTPS URLs, and unsupported methods receive a blocked-destination page with a browser popup and a link back to CrazyGames.
-
-Some CrazyGames features may not work through a proxy because of site security controls, third-party services, WebSockets, or CDN requirements. The direct site remains the most reliable option:
-
-```text
-https://www.crazygames.com/
-```
+A missing `url` defaults to `https://www.crazygames.com/`. Non-CrazyGames destinations, non-HTTPS URLs, and unsupported methods receive a blocked-destination page.
