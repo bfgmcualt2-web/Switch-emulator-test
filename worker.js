@@ -84,10 +84,8 @@ export default {
     // targets, while never forwarding credentials or upstream cookies.
     const incoming = new URL(request.url);
     const headers = new Headers(request.headers);
-    headers.delete('cookie');
-    headers.delete('authorization');
-    headers.delete('host');
-    headers.delete('accept-encoding');
+    
+    
 
     try {
       const upstream = await fetch(new Request(target, {
