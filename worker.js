@@ -53,6 +53,38 @@ function json(data, status = 200) {
   }));
 }
 
+const formPageHtml = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Allowlisted Gaming Proxy</title>
+    <style>
+      :root { --bg: #0f172a; --panel: #111827; --text: #f8fafc; --muted: #cbd5e1; --accent: #f87171; --border: rgba(148, 163, 184, 0.25); }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: linear-gradient(135deg, #0f172a, #111827 45%, #0b1120); color: var(--text); font-family: Arial, Helvetica, sans-serif; }
+      .card { width: min(760px, calc(100vw - 32px)); background: rgba(17, 24, 39, 0.9); border: 1px solid var(--border); border-radius: 20px; padding: 28px; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.55); }
+      h1 { margin: 0 0 12px; font-size: clamp(2rem, 5vw, 3rem); }
+      p { color: var(--muted); line-height: 1.6; }
+      form { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+      input { flex: 1 1 420px; min-height: 52px; padding: 0 16px; border-radius: 12px; border: 1px solid var(--border); background: rgba(15, 23, 42, 0.9); color: var(--text); font-size: 1rem; }
+      button { min-height: 52px; padding: 0 22px; border: none; border-radius: 12px; background: linear-gradient(135deg, #f87171, #ef4444); color: white; font-weight: 700; cursor: pointer; }
+      .note { margin-top: 18px; font-size: 0.95rem; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Gaming proxy</h1>
+      <p>This proxy supports a fixed allowlist of approved gaming sites. Paste a URL from one of the supported origins below.</p>
+      <form method="GET" action="/proxy">
+        <input type="url" name="url" placeholder="https://www.xbox.com/play" required />
+        <button type="submit">Open</button>
+      </form>
+      <p class="note">Allowed origins include: xbox.com, www.xbox.com, now.gg, www.now.gg, lordz.io, www.lordz.io, and common IO gaming sites like agar.io, diep.io, mope.io, slither.io, shellshock.io, and tinyfishing.io.</p>
+    </main>
+  </body>
+</html>`;
+
 function parseTargetUrl(request) {
   const incoming = new URL(request.url);
   const candidate = incoming.searchParams.get('url');
@@ -84,8 +116,25 @@ export default {
       return json({ error: 'Only GET and HEAD are supported.' }, 405);
     }
 
+    const incoming = new URL(request.url);
+
+    if (incoming.pathname === '/' || incoming.pathname === '/index.html') {
+      return withCors(new Response(formPageHtml, {
+        status: 200,
+        headers: { 'content-type': 'text/html; charset=utf-8' },
+      }));
+    }
+
+    if (incoming.pathname === '/proxy' || incoming.pathname === '/proxy/') {
+      if (!incoming.searchParams.has('url')) {
+        return withCors(new Response(formPageHtml, {
+          status: 200,
+          headers: { 'content-type': 'text/html; charset=utf-8' },
+        }));
+      }
+    }
+
     try {
-      const incoming = new URL(request.url);
       const target = parseTargetUrl(request);
       const headers = new Headers(request.headers);
 
