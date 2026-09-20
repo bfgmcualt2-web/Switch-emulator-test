@@ -3,92 +3,213 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Allowlisted Gaming Proxy</title>
+    <meta name="theme-color" content="#ffffff" />
+    <title>Gaming Proxy</title>
     <style>
       :root {
-        --bg: #0f172a;
-        --panel: #111827;
-        --text: #f8fafc;
-        --muted: #cbd5e1;
-        --accent: #f87171;
-        --border: rgba(148, 163, 184, 0.25);
+        color-scheme: light;
+        --text: #202124;
+        --muted: #5f6368;
+        --blue: #1a73e8;
+        --border: #dfe1e5;
+        --surface: #f8f9fa;
       }
+
       * { box-sizing: border-box; }
+
       body {
-        margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(135deg, #0f172a, #111827 45%, #0b1120);
+        margin: 0;
         color: var(--text);
+        background: #fff;
         font-family: Arial, Helvetica, sans-serif;
       }
-      .card {
-        width: min(760px, calc(100vw - 32px));
-        background: rgba(17, 24, 39, 0.9);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 28px;
-        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.55);
-      }
-      h1 {
-        margin: 0 0 12px;
-        font-size: clamp(2rem, 5vw, 3rem);
-      }
-      p {
-        color: var(--muted);
-        line-height: 1.6;
-      }
-      form {
+
+      header {
+        align-items: center;
         display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 20px;
+        gap: 1.25rem;
+        justify-content: flex-end;
+        padding: 1.25rem 2rem;
       }
+
+      header a,
+      footer a {
+        color: var(--muted);
+        font-size: 0.875rem;
+        text-decoration: none;
+      }
+
+      header a:hover,
+      footer a:hover { text-decoration: underline; }
+
+      .app-grid {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 100vh;
+      }
+
+      main {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4rem 1rem 7rem;
+      }
+
+      .brand {
+        font-size: clamp(3.7rem, 13vw, 6.5rem);
+        font-weight: 500;
+        letter-spacing: -0.28rem;
+        line-height: 1;
+        margin: 0 0 2rem;
+      }
+
+      .brand span:nth-child(1), .brand span:nth-child(4) { color: #4285f4; }
+      .brand span:nth-child(2), .brand span:nth-child(6) { color: #ea4335; }
+      .brand span:nth-child(3) { color: #fbbc05; }
+      .brand span:nth-child(5) { color: #34a853; }
+
+      .search-form {
+        max-width: 584px;
+        position: relative;
+        width: min(100%, 584px);
+      }
+
+      .search-icon {
+        color: #9aa0a6;
+        left: 1.1rem;
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
       input {
-        flex: 1 1 420px;
-        min-height: 52px;
-        padding: 0 16px;
-        border-radius: 12px;
         border: 1px solid var(--border);
-        background: rgba(15, 23, 42, 0.9);
+        border-radius: 999px;
         color: var(--text);
         font-size: 1rem;
+        height: 46px;
+        outline: none;
+        padding: 0 1.25rem 0 3rem;
+        transition: box-shadow 160ms ease, border-color 160ms ease;
+        width: 100%;
       }
+
+      input:hover,
+      input:focus {
+        border-color: transparent;
+        box-shadow: 0 1px 6px rgba(32, 33, 36, 0.22);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin-top: 1.8rem;
+      }
+
       button {
-        min-height: 52px;
-        padding: 0 22px;
-        border: none;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #f87171, #ef4444);
-        color: white;
-        font-weight: 700;
+        background: var(--surface);
+        border: 1px solid var(--surface);
+        border-radius: 4px;
+        color: #3c4043;
         cursor: pointer;
+        font-size: 0.875rem;
+        padding: 0.7rem 1rem;
       }
-      .note {
-        margin-top: 18px;
-        font-size: 0.95rem;
+
+      button:hover,
+      button:focus-visible {
+        border-color: #dadce0;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        outline: none;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 0.875rem;
+        margin: 2rem 0 0;
+        text-align: center;
+      }
+
+      .hint strong { color: #3c4043; font-weight: 500; }
+
+      footer {
+        align-items: center;
+        background: var(--surface);
+        border-top: 1px solid #dadce0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.25rem;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+      }
+
+      .footer-links { display: flex; gap: 1.5rem; }
+
+      @media (max-width: 600px) {
+        header { padding: 1rem; }
+        main { padding: 2rem 1rem 5rem; }
+        .brand { margin-bottom: 1.5rem; }
+        footer { justify-content: center; padding: 1rem; }
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <h1>Gaming proxy</h1>
-      <p>
-        This proxy supports a fixed allowlist of approved gaming sites. Paste a URL from one of the supported origins below.
-      </p>
-      <form method="GET" action="/proxy">
-        <input
-          type="url"
-          name="url"
-          placeholder="https://www.xbox.com/play"
-          required
-        />
-        <button type="submit">Open</button>
-      </form>
-      <p class="note">
-        Allowed origins include: xbox.com, www.xbox.com, now.gg, www.now.gg, lordz.io, www.lordz.io, and common io gaming sites like agar.io, diep.io, mope.io, slither.io, shellshock.io, and tinyfishing.io.
-      </p>
-    </main>
+    <div class="app-grid">
+      <header>
+        <a href="/">Home</a>
+        <a href="#about">About</a>
+      </header>
+
+      <main id="about">
+        <h1 class="brand" aria-label="Gaming proxy">
+          <span>G</span><span>a</span><span>m</span><span>i</span><span>n</span><span>g</span>
+        </h1>
+
+        <form class="search-form" method="GET" action="/proxy">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <label class="visually-hidden" for="url">Enter a gaming URL</label>
+          <input
+            id="url"
+            type="url"
+            name="url"
+            placeholder="Enter a gaming URL"
+            autocomplete="url"
+            spellcheck="false"
+            required
+          />
+          <div class="actions">
+            <button type="submit">Open game</button>
+            <button type="submit" name="url" value="https://www.crazygames.com/">I'm Feeling Lucky</button>
+          </div>
+        </form>
+
+        <p class="hint">Securely browse supported games through the <strong>Gaming Proxy</strong>.</p>
+      </main>
+
+      <footer>
+        <a href="/">Gaming Proxy</a>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#about">About</a>
+          <a href="https://www.crazygames.com/">Supported games</a>
+        </nav>
+      </footer>
+    </div>
+
+    <style>
+      .visually-hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
+    </style>
   </body>
 </html>
