@@ -1,28 +1,3 @@
-const ALLOWED_ROOT_DOMAIN = "crazygames.com";
-
-function isAllowedHost(hostname) {
-  const host = hostname.toLowerCase().replace(/\.$/, "");
-  return host === ALLOWED_ROOT_DOMAIN || host.endsWith(`.${ALLOWED_ROOT_DOMAIN}`);
-}
-
-function parseTargetUrl(request) {
-  const url = new URL(request.url);
-  const value = url.searchParams.get("url");
-  if (!value) return null;
-
-  const target = new URL(value);
-
-  if (target.protocol !== "https:") {
-    throw new Error("Only HTTPS URLs are allowed.");
-  }
-
-  if (!isAllowedHost(target.hostname)) {
-    throw new Error("Only crazygames.com and its subdomains are allowed.");
-  }
-
-  return target;
-}
-
 function withCors(response) {
   const headers = new Headers(response.headers);
   headers.set("access-control-allow-origin", "*");
